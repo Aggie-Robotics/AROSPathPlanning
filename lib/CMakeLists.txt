@@ -1,1 +1,0 @@
-project(path_tests)

@@ -1,9 +1,10 @@
-set(BINARY ${CMAKE_PROJECT_NAME})
-
-set(SOURCES
-        PathBottom.cpp
-        PathTop.cpp
+set(Sources
+        PathPlanning.cpp
+        Path.cpp
+        PathLeft.cpp
+        PathRight.cpp
+        PathEmpty.cpp
         utils.cpp
         )
 
-add_library(${BINARY}_lib ${SOURCES})
+add_library(${PROJECT_NAME} ${Sources})

@@ -4,7 +4,6 @@
 
 #include <gtest/gtest.h>
 #include "../include/utils.hpp"
-//using namespace aros::utils;
 
 // Positive test cases
 TEST(SamePositionTest, Same) {

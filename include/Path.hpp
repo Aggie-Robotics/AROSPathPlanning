@@ -1,24 +1,29 @@
-//
-// Created by jerry on 1/11/2021.
-//
 #include <vector>
+#include <string>
+#include <stdint.h>
 #include "utils.hpp"
 #ifndef AROSPATHPLANNING_PATH_H
 #define AROSPATHPLANNING_PATH_H
 
-using namespace aros::utils;
+namespace aros::Route{
+    const utils::Point invalidPoint {INT32_MAX, INT32_MAX, INT32_MAX};
 
-namespace aros::Path{
     class Path{
-        std::string which;
-        std::vector<Point> route;
+        std::vector<utils::Point> route;
+        int index;
+        std::string routeChoice;
+        void leftRoute();
+        void rightRoute();
+        void emptyRoute();
 
-        vector<Point> topRoute();
-        vector<Point> bottomRoute();
+
     public:
-        Path(std::string which);
-
-
+        Path(std::string routeChoice);
+        std::string getRouteChoice();
+        int getNumPoints();
+        utils::Point getCurrentPoint();
+        utils::Point next();
+        bool done();
 
     };
 }
