@@ -22,7 +22,8 @@ namespace aros::Route{
         std::string getRouteChoice();
         int getNumPoints();
         utils::Point getCurrentPoint();
-        utils::Point next();
+        utils::Point getNextPoint();
+        std::string getNextAction();
         bool done();
 
     };

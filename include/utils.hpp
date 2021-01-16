@@ -25,6 +25,7 @@ namespace aros::utils {
     double degToRad(double d);
     double radToDeg(double r);
 
-
+    bool isMove(Point a, Point b);
+    bool isTurn(Point a, Point b);
 }
 #endif //AROSPATHPLANNING_UTILS_HPP

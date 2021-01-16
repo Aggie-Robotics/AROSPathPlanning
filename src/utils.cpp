@@ -17,12 +17,12 @@ namespace aros::utils {
     double tolerance_o = 0.002;
 
     bool same_position(double x1, double y1, double x2, double y2) {
-        return sqrt(pow(x2 - x1, 2) +
-                    pow(y2 - y1, 2)) <= tolerance_p;
+        return std::abs(sqrt(pow(x2 - x1, 2) +
+                    pow(y2 - y1, 2))) <= tolerance_p;
     }
 
     bool same_orientation(double o1, double o2) {
-        return abs(o1 - o2) <= tolerance_o;
+        return std::abs(o1 - o2) <= tolerance_o;
     }
 
     double degToRad(double d) {
@@ -31,5 +31,18 @@ namespace aros::utils {
 
     double radToDeg(double r) {
         return r * 180 / pi;
+    }
+
+    bool isMove(Point a, Point b) { //possible error when case: "everything is the same"? which honestly shouldn't even happen
+        if (a.x == b.x && a.y == b.y && a.orientation != b.orientation) //orientation part tries to account for above error
+            return true;
+        return false;
+    }
+
+    bool isTurn(Point a, Point b){
+        if (a.orientation == b.orientation && (a.x != b.x || a.y != b.y)){
+            return true;
+        }
+        return false;
     }
 }

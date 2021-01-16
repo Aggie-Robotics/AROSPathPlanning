@@ -19,10 +19,10 @@ TEST(PathTest, LeftNext) {
 
     Point p;
     while (!left.done()) {
-        p = left.next();
+        p = left.getNextPoint();
         ASSERT_FALSE(p == invalidPoint);
     }
-    p = left.next();
+    p = left.getNextPoint();
     ASSERT_TRUE(p == invalidPoint);
 }
 
@@ -35,11 +35,11 @@ TEST(PathTest, RightNext) {
     int numPoints = 0;
     Point p;
     while (!right.done()) {
-        p = right.next();
+        p = right.getNextPoint();
         ASSERT_FALSE(p == invalidPoint);
         numPoints++;
     }
-    p = right.next();
+    p = right.getNextPoint();
     ASSERT_TRUE(p == invalidPoint);
     ASSERT_TRUE(numPoints == right.getNumPoints());
 }
