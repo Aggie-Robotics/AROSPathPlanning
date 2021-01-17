@@ -109,10 +109,11 @@ for file in files:
             break
 
     # WRITE RESULTS TO FILE
-    output_file = os.path.join(config["PATH"]["OUTPUT_FILE_LOCATION"], "gen_" + file)
+    output_file = os.path.join(config["PATH"]["OUTPUT_FILE_LOCATION"],
+                               "gen_" + file.split(".")[0] + config["FILE"]["OUTPUT"])
     with open(output_file, "w+") as of:
         for w in smooth_waypoints:
-            of.write(str(w[0]) + "," + str(w[1]) + "," + str(w[5]) + "," + direction + "\n")
+            of.write(str(w[0]) + " " + str(w[1]) + " " + str(w[5]) + " " + direction + "\n")
 
     # GRAPH WAYPOINTS
     xvals = []
