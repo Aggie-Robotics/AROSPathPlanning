@@ -17,18 +17,45 @@ input_path = config["PATH"]["INPUT_FILE_LOCATION"]
 files = [f for f in os.listdir(input_path) ]
 #set_trace()
 
+# PREPARE TO WRITE RESULTS TO FILE
+output_file = os.path.join(config["PATH"]["OUTPUT_FILE_LOCATION"],
+                           "generated" + config["FILE"]["EXTENSION"])
+
+try:
+    op = open(output_file, "w+")
+except Exception as e:
+    print(f"Cannot open file to write, error {e}")
+    sys.exit(1)
+
+op.write(
+'''#ifndef LEARNCPP_GENERATED_HPP
+#define LEARNCPP_GENERATED_HPP
+
+// GENERATED FILE - DO NOT EDIT
+
+#include "types.hpp"
+
+namespace aros::PathPlanning {
+//waypoint.x, waypoint.y, desired velocity
+
+PlannedPath pp = {
+'''
+)
+
 for file in files:
     input_file = os.path.join(input_path, file)
     waypoints = []
     with open(input_file) as f:
+        # action = f.readline() # first action
         lines = f.readlines()
-        for line in lines:
-            values = line.rstrip().split(",")
-            values2 = [float(x) for x in values[:2]]
-            direction = values[2]
-            waypoints.append(values2)
-
-    # INITIALIZE WAYPOINTS
+        if len(lines) == 0:
+            continue
+        action = "{ " + lines[0].rstrip() + " }"
+        direction = lines[1].rstrip()
+        for line in lines[2:]:
+            x_y_string = line.rstrip().split(",")
+            x_y_float = [float(x) for x in x_y_string[:2]]
+            waypoints.append(x_y_float)
 
     # MAKE SURE AT LEAST 2 POINTS SELECTED
     if len(waypoints) < 2:
@@ -108,12 +135,20 @@ for file in files:
         else:
             break
 
-    # WRITE RESULTS TO FILE
-    output_file = os.path.join(config["PATH"]["OUTPUT_FILE_LOCATION"],
-                               "gen_" + file.split(".")[0] + config["FILE"]["OUTPUT"])
-    with open(output_file, "w+") as of:
-        for w in smooth_waypoints:
-            of.write(str(w[0]) + " " + str(w[1]) + " " + str(w[5]) + " " + direction + "\n")
+    # WRITING POINTS TO FILE
+    op.write("\t// " + file + "\n")
+
+    # WRITING C++ SYNTAX TO END FILE
+    op.write("\t{ //EachSegment\n")
+    op.write("\t\t{ //PathSegment\n")
+    for w in smooth_waypoints:
+        if direction == "BACKWARD": # negative velocity
+            w[4] *= -1
+        op.write("\t\t\t{ " + f'{w[0]: .4f}, {w[1]: .4f}, {w[4]: .4f}' + " },\n")
+    op.write("\t\t}; //PathSegment\n")
+    op.write("\t\t" + action + " //Action\n")
+    op.write("\t},\n")
+
 
     # GRAPH WAYPOINTS
     xvals = []
@@ -126,3 +161,7 @@ for file in files:
     plt.plot(xvals, yvals)
     plt.axis("equal")
     plt.show()
+op.write("}; // PlannedPath\n")
+op.write("} // namespace aros::PathPlanning")
+op.write("#endif //AROSPATHPLANNING_GENERATED_HPP\n")
+op.close() # close the output file
